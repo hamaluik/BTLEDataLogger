@@ -18,5 +18,5 @@
         android:layout_height="wrap_content"
         android:id="@+id/scanDevicesButton"
         android:singleLine="false"
-        android:text="@string/scan_devices" />
+        android:text="@string/start_scan_for_devices" />
 </LinearLayout>

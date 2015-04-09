@@ -14,6 +14,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Debug;
 import android.os.Handler;
 import android.os.ParcelUuid;
 import android.support.v7.app.ActionBarActivity;
@@ -21,7 +22,9 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -36,6 +39,7 @@ public class DeviceScanActivity extends BaseActivity {
     private Handler handler = new Handler();
 
     private boolean scanning = false;
+    private Button scanButton;
 
     public List<BluetoothDevice> bluetoothDevices;
     public HashMap<BluetoothDevice, Integer> deviceRSSIs;
@@ -66,6 +70,14 @@ public class DeviceScanActivity extends BaseActivity {
         // initialize the device list
         bluetoothDevices = new ArrayList<BluetoothDevice>();
         deviceRSSIs = new HashMap<BluetoothDevice, Integer>();
+
+        // grab the button
+        scanButton = (Button)findViewById(R.id.scanDevicesButton);
+        scanButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                startScan(v);
+            }
+        });
     }
 
     @Override protected int getLayoutResource() {
@@ -89,15 +101,47 @@ public class DeviceScanActivity extends BaseActivity {
         lv.setAdapter(adapter);
 
         // start scanning
-        scanBTLEDevices(true);
+        //scanBTLEDevices(true);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         scanBTLEDevices(false);
-        bluetoothDevices.clear();
-        deviceRSSIs.clear();
+    }
+
+    // called when the user clicks the scan button
+    public void startScan(View view) {
+        if(scanning) {
+            scanBTLEDevices(false);
+        }
+        else {
+            scanBTLEDevices(true);
+        }
+    }
+
+    public boolean isScanning() {
+        return scanning;
+    }
+
+    private void setScanning(final boolean enable) {
+        scanning = enable;
+        if(scanning) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                scanButton.setText(getResources().getString(R.string.stop_scan_for_devices));
+                }
+            });
+        }
+        else {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    scanButton.setText(getResources().getString(R.string.start_scan_for_devices));
+                }
+            });
+        }
     }
 
     @Override
@@ -109,30 +153,41 @@ public class DeviceScanActivity extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    private void scanBTLEDevices(final boolean enable) {
+    public void scanBTLEDevices(final boolean enable) {
+        if(bluetoothAdapter == null || bluetoothAdapter.getBluetoothLeScanner() == null) {
+            Log.d("BTLE", "Bluetooth adapter or scanner were null!");
+            return;
+        }
+
         if(enable) {
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    scanning = false;
-
-                    // filter explicitly for the UART
-                    List<ScanFilter> filters = new ArrayList<ScanFilter>();
-                    filters.add(new ScanFilter.Builder().setServiceUuid(ParcelUuid.fromString("6E400001-B5A3-F393-E0A9-E50E24DCCA9E")).build());
-
-                    // setup the scan settings
-                    ScanSettings settings = new ScanSettings.Builder().setReportDelay(0).setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY).build();
-
-                    bluetoothAdapter.getBluetoothLeScanner().startScan(filters, settings, scanCallback);
+                    //scanning = false;
+                    setScanning(false);
+                    bluetoothAdapter.getBluetoothLeScanner().stopScan(scanCallback);
                 }
             }, 5000);
 
-            scanning = true;
-            bluetoothAdapter.getBluetoothLeScanner().stopScan(scanCallback);
+            //scanning = true;
+            setScanning(true);
+
+            // filter explicitly for the UART
+            List<ScanFilter> filters = new ArrayList<ScanFilter>();
+            filters.add(new ScanFilter.Builder().setServiceUuid(ParcelUuid.fromString("6E400001-B5A3-F393-E0A9-E50E24DCCA9E")).build());
+
+            // setup the scan settings
+            ScanSettings settings = new ScanSettings.Builder().setReportDelay(0).setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY).build();
+
+            bluetoothAdapter.getBluetoothLeScanner().startScan(filters, settings, scanCallback);
         }
         else {
-            scanning = false;
+            //scanning = false;
+            setScanning(false);
             bluetoothAdapter.getBluetoothLeScanner().stopScan(scanCallback);
+            bluetoothDevices.clear();
+            deviceRSSIs.clear();
+            adapter.notifyDataSetChanged();
         }
     }
 

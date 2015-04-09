@@ -25,28 +25,21 @@
                 android:cropToPadding="false"
                 android:focusableInTouchMode="false"
                 android:layout_gravity="center"
-                android:layout_alignParentLeft="false"
                 android:layout_marginLeft="0dp"
-                android:layout_alignParentTop="false"
                 android:layout_marginTop="0dp"
                 android:layout_margin="0dp"
                 android:layout_marginRight="0dp"
                 android:layout_marginBottom="0dp"
-                android:layout_alignParentBottom="false"
-                android:layout_alignParentRight="false"
-                android:layout_alignWithParentIfMissing="false"
-                android:layout_centerInParent="true" />
+                android:contentDescription="@string/signal_strength_hint" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="rssi"
+                android:text="-61"
                 android:id="@+id/rssiIndicator"
                 android:layout_gravity="center"
-                android:layout_alignParentLeft="true"
                 android:layout_marginLeft="0dp"
-                android:layout_alignParentTop="true"
                 android:layout_marginTop="0dp"
                 android:layout_margin="0dp"
                 android:layout_marginRight="0dp"
@@ -72,10 +65,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Name"
             android:id="@+id/deviceName"
             android:autoText="false"
-            android:textColor="@color/colorPrimary" />
+            android:textColor="@color/colorPrimary"
+            android:text="UART" />
 
         <Space
             android:layout_width="6dp"
@@ -85,9 +78,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="Address"
             android:id="@+id/deviceDescription"
-            android:textColor="@color/primary_text_default_material_dark" />
+            android:textColor="@color/primary_text_default_material_dark"
+            android:text="00:0a:95:9d:68:16" />
     </LinearLayout>
 
     <Space
@@ -102,6 +95,7 @@
         android:layout_marginTop="@dimen/activity_vertical_margin"
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
         android:layout_marginRight="@dimen/activity_horizontal_margin"
-        android:layout_marginBottom="@dimen/activity_vertical_margin" />
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
+        android:enabled="true" />
 
 </LinearLayout>

@@ -3,6 +3,8 @@ package ca.ualberta.mfplab.bledatalogger;
 import android.app.Activity;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
+import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,13 +51,37 @@ public class DeviceScanResultsAdapter extends BaseAdapter {
         TextView deviceDescription = (TextView)view.findViewById(R.id.deviceDescription);
         Button connectButton = (Button)view.findViewById(R.id.connectToDevice);
 
-        BluetoothDevice device = hostActivity.bluetoothDevices.get(row);
+        final BluetoothDevice device = hostActivity.bluetoothDevices.get(row);
         rssiIndicator.setText(hostActivity.deviceRSSIs.get(device).toString());
         deviceName.setText(device.getName());
         deviceDescription.setText(device.getAddress());
 
+        if(!connectButton.hasOnClickListeners()) {
+            connectButton.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    if(device == null) {
+                        Log.d("CONNECT", "Device was null!");
+                        return;
+                    }
+
+                    // create the intent for the new activity
+                    final Intent intent = new Intent(hostActivity, UARTDisplayActivity.class);
+                    intent.putExtra(UARTDisplayActivity.EXTRAS_DEVICE_NAME, device.getName());
+                    intent.putExtra(UARTDisplayActivity.EXTRAS_DEVICE_ADDRESS, device.getAddress());
+
+                    // stop any scanning
+                    if(hostActivity.isScanning()) {
+                        hostActivity.scanBTLEDevices(false);
+                    }
+
+                    // start the new activity
+                    Log.d("CONNECT", "Starting UART display activity...");
+                    hostActivity.startActivity(intent);
+                }
+            });
+        }
+
         return view;
     }
-
 
 }
