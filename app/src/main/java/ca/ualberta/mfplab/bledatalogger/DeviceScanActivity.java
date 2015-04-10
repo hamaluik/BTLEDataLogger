@@ -130,7 +130,7 @@ public class DeviceScanActivity extends BaseActivity {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                scanButton.setText(getResources().getString(R.string.stop_scan_for_devices));
+                    scanButton.setText(getResources().getString(R.string.stop_scan_for_devices));
                 }
             });
         }
@@ -160,17 +160,20 @@ public class DeviceScanActivity extends BaseActivity {
         }
 
         if(enable) {
+            // only scan for 5 seconds
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    //scanning = false;
-                    setScanning(false);
-                    bluetoothAdapter.getBluetoothLeScanner().stopScan(scanCallback);
+                    scanBTLEDevices(false);
                 }
             }, 5000);
 
             //scanning = true;
             setScanning(true);
+
+            bluetoothDevices.clear();
+            deviceRSSIs.clear();
+            adapter.notifyDataSetChanged();
 
             // filter explicitly for the UART
             List<ScanFilter> filters = new ArrayList<ScanFilter>();
@@ -185,9 +188,6 @@ public class DeviceScanActivity extends BaseActivity {
             //scanning = false;
             setScanning(false);
             bluetoothAdapter.getBluetoothLeScanner().stopScan(scanCallback);
-            bluetoothDevices.clear();
-            deviceRSSIs.clear();
-            adapter.notifyDataSetChanged();
         }
     }
 
