@@ -75,7 +75,7 @@ public class LogService extends Service {
 
         // create a print writer for it
         try {
-            printWriter = new PrintWriter(new BufferedWriter(new FileWriter(logFile)));
+            printWriter = new PrintWriter(new BufferedWriter(new FileWriter(logFile, true)));
         }
         catch(Exception e) {
             Log.e(TAG, e.toString());
