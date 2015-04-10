@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -92,6 +93,9 @@ public class UARTDisplayActivity extends BaseActivity {
         // unbind from the uart service when we're done!
         if(uartBound) {
             unbindService(uartServiceConnection);
+        }
+        if(logBound) {
+            unbindService(logServiceConnection);
         }
         try {
             LocalBroadcastManager.getInstance(this).unregisterReceiver(uartStatusChangeReceiver);
@@ -272,6 +276,10 @@ public class UARTDisplayActivity extends BaseActivity {
         if(logService.isLogging()) {
             logService.cleanup();
             updateLoggingButtonText();
+
+            // enable the edit text
+            logFileNameEditText.setEnabled(true);
+            logFileNameEditText.setFocusable(true);
         }
         else {
             // get the filename
@@ -295,6 +303,17 @@ public class UARTDisplayActivity extends BaseActivity {
             }
 
             updateLoggingButtonText();
+
+            // update the text to the actual filename
+            logFileNameEditText.setText(filename);
+
+            // disable the edit text
+            logFileNameEditText.setEnabled(false);
+            logFileNameEditText.setFocusable(false);
+
+            // hide the keyboard if it's open
+            InputMethodManager inputManager = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            inputManager.hideSoftInputFromWindow((null == getCurrentFocus()) ? null : getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
         }
     }
 }
