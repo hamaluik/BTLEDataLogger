@@ -18,6 +18,9 @@ import java.util.List;
  * Created by mfplab on 08/04/2015.
  */
 public class DeviceScanResultsAdapter extends BaseAdapter {
+    // tag for logging
+    private final static String TAG = UARTService.class.getSimpleName();
+
     private DeviceScanActivity hostActivity;
 
     public DeviceScanResultsAdapter(DeviceScanActivity hostActivity) {
@@ -60,7 +63,7 @@ public class DeviceScanResultsAdapter extends BaseAdapter {
             connectButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     if(device == null) {
-                        Log.d("CONNECT", "Device was null!");
+                        Log.e(TAG, "Device was null!");
                         return;
                     }
 
@@ -75,7 +78,6 @@ public class DeviceScanResultsAdapter extends BaseAdapter {
                     }
 
                     // start the new activity
-                    Log.d("CONNECT", "Starting UART display activity...");
                     hostActivity.startActivity(intent);
                 }
             });

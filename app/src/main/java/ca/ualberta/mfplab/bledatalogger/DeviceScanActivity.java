@@ -195,11 +195,11 @@ public class DeviceScanActivity extends BaseActivity {
         @Override
         public void onScanResult(int callbackType, ScanResult result) {
             BluetoothDevice device = result.getDevice();
-            deviceRSSIs.put(device, result.getRssi());
             if(!bluetoothDevices.contains(device)) {
                 bluetoothDevices.add(device);
+                adapter.notifyDataSetChanged();
+                deviceRSSIs.put(device, result.getRssi());
             }
-            adapter.notifyDataSetChanged();
         }
 
         @Override
