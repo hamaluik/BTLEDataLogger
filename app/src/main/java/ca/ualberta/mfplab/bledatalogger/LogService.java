@@ -59,9 +59,11 @@ public class LogService extends Service {
 
         // get the documents folder
         documentsFolder = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS);
-        if(!documentsFolder.mkdirs()) {
-            Log.e(TAG, "Can't initialize as the documents folder doesn't exist!");
-            return false;
+        if(!documentsFolder.exists()) {
+            if(!documentsFolder.mkdirs()) {
+                Log.e(TAG, "Can't initialize as the documents folder doesn't exist!");
+                return false;
+            }
         }
 
         // now create the file
@@ -86,6 +88,7 @@ public class LogService extends Service {
 
     public void cleanup() {
         logging = false;
+        Log.d(TAG, "Cleaning up!");
         if(printWriter != null) {
             printWriter.close();
         }
