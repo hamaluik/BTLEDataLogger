@@ -1,6 +1,5 @@
-package ca.ualberta.mfplab.bledatalogger;
+package com.blazingmammothgames.tools.btledatalogger;
 
-import android.app.Activity;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.content.Intent;
@@ -11,8 +10,6 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.TextView;
-
-import java.util.List;
 
 /**
  * Created by mfplab on 08/04/2015.

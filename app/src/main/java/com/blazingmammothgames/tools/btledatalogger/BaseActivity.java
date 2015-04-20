@@ -1,4 +1,4 @@
-package ca.ualberta.mfplab.bledatalogger;
+package com.blazingmammothgames.tools.btledatalogger;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;

@@ -1,4 +1,4 @@
-package ca.ualberta.mfplab.bledatalogger;
+package com.blazingmammothgames.tools.btledatalogger;
 
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
